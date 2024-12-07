@@ -1,0 +1,1 @@
+from .vae import BetaVAE as VAE

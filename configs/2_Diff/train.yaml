@@ -1,0 +1,67 @@
+seed: 123456790
+wandb:
+  use: true
+  project: Diff
+  entity: <skip>
+
+
+load_from_pretrained_ckpt: null
+
+default_root_dir: train_root_dir/Diff
+num_epochs: 1000001
+
+dataset_n_dataloader:
+  n_workers: 32
+  batch_size: 64
+
+  dataset_path: data/datasets/2.1_text_n_latentcode
+
+checkpoint:
+  path: train_root_dir/Diff/checkpoint
+  freq: 500
+
+diffusion_model_paramerter:
+  dim_latentcode: 768
+
+  z_compress_depth: 4
+  z_hat_dim: 32
+
+  gsemb_latent_dim: 4
+  gsemb_num_embeddings: 128 # D
+
+  text_condition:
+    d_model: 1024
+    compressed_d_model: 128
+    padding_length: 16
+    resnet_deepth: 1
+    vq_n_emb: 128
+    vq_width: 4
+    vq_height: 4
+    vq_dim_emb: 64
+    vq_beta: 0.25
+
+  diffusion_config:
+    timesteps: 1000
+    objective: pred_x0
+    loss_type: l2
+
+  diffusion_model_config:
+    depth: 4
+    text_hat_dim: 64
+    bbox_ratio_dim: 3
+    text_expand_ratio: 4
+    dim: 768
+    ff_dropout: 0.3
+    resnet_deepth: 2
+
+lr: 1.0e-5
+z_KL_ratio: 1
+tau_ratio_on_epoch: 0.0001 # when epoch == 10k, tau = 0.0001 * 10k + 0.2 = 1.2
+
+evaluation:
+  sdf_model_path: null
+  max_batch: 8192  # 2^18
+  eval_mesh_output_path: train_root_dir/Diff/tempmesh
+  resolution: 256
+  count: 10
+  freq_epoch: 400

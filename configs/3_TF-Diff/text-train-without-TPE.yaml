@@ -1,0 +1,93 @@
+base_on_model: null
+
+seed: 1234567890
+wandb:
+  use: true
+  project: TF_Diffusion
+  entity: <skip>
+
+default_root_dir: train_root_dir/Transformer_Diffusion
+num_epochs: 1000001
+
+dataset_n_dataloader:
+  n_workers: 16
+  batch_size: 64
+
+  dataset_path: data/datasets/4_transformer_dataset
+  cut_off: -1
+  enc_data_fieldname: description
+
+checkpoint:
+  path: train_root_dir/Transformer_Diffusion/checkpoint
+  freq: 10000
+
+part_structure:
+  bounding_box: 6 # 3 + (3 + 3) # center + length of x, y, z (mean, logvar)
+  joint_data_origin: 3
+  joint_data_direction: 3
+  limit: 4
+  # condition: 128
+  condition: 128
+  latentcode: 768
+
+transformer_model_paramerter:
+  tree_position_embedding: false
+  shape_prior: true
+  tokenizer_hidden_dim: 4096
+  tokenizer_dropout: 0.1
+
+  n_head: 8
+  n_layer: 8
+  d_model: 1024
+  decoder_dropout: 0.1
+
+  position_embedding_dropout: 0.1
+  position_embedding_dim_single_emb: 64
+
+  ffn_hidden_dim: 4096
+  ffn_dropout: 0.1
+
+  # channel, weight, height
+  # vq_expand_dim: [32, 4, 4]
+  # n_embed: 256
+  # vq_beta: 0.25
+  # vq_loss_weight: 0.1
+  # before_vq_net_deepth: 4
+
+  encoder_kv_dim: 1024 # decided by pretrained encoder model.
+  post_encoder_deepth: 4
+  post_encoder_dropout: 0.2
+
+  # condition_post_process_hidden_dim: 768
+  # condition_post_process_deepth: 2
+
+diffusion_model:
+  pretrained_model_path: null
+  # z_hat_dropout: 0.2
+
+optimizer_paramerter:
+  tf_lr: 1
+  scheduler_factor: 0.0015
+  scheduler_warmup: 30
+  betas: [0.9, 0.98]
+  eps: 1.0e-9
+
+  diff_lr: 1.0e-6
+
+  loss_ratio:
+    et_loss: 1
+    tf_loss: 10
+    th_loss: 5
+    zl_loss: 2
+    # vq_loss: 1
+    # df_loss: 2
+
+
+evaluation:
+  sdf_model_path: null
+  max_batch: 131072  # 2^17
+  z_batch: 256
+  eval_mesh_output_path: train_root_dir/SDF/tempmesh
+  resolution: 256
+  count: 20
+  freq: 2000

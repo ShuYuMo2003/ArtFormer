@@ -1,0 +1,1 @@
+from .cov_pointnet import ConvPointnet as Encoder

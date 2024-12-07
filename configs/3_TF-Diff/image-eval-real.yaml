@@ -1,0 +1,14 @@
+checkpoint_path: <skip>
+
+OPTION: 4
+
+eval_output_path: log/TF-Diff_image-real/
+
+t5_max_sentence_length: 512
+
+gensdf_latentcode_evaluator:
+  gensdf_model_path: null
+  resolution: 16
+  max_batch: 262144         # 2 ^ 18
+
+number_of_trial: 20
