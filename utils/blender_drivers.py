@@ -2,6 +2,7 @@ import shutil
 import time
 import subprocess
 import multiprocessing
+import point_cloud_utils as pcu
 from PIL import Image
 from .generate_obj_pic import generate_meshs
 from pathlib import Path
@@ -62,9 +63,20 @@ def generate_obj_pics_blender_batched_frame(_parts_data, percentage, workspace_p
     temp_path = workspace_path / "temp"; temp_path.mkdir()
     rest_path = workspace_path / "result.png"
 
-    for idx, mesh in enumerate(meshs): mesh.export(mesh_path / f'{idx}.obj')
+    for idx, mesh in enumerate(meshs):
+        # t0 = time.time()
+        curr_mesh_path = mesh_path / f'{idx}.obj'
+        mesh.export(curr_mesh_path)
+        # v, f = pcu.load_mesh_vf(curr_mesh_path.as_posix())
+        # v_eighth, f_eighth, _, _ = pcu.decimate_triangle_mesh(v, f, max_faces=f.shape[0] // 4)
+        # pcu.save_mesh_vf(curr_mesh_path.as_posix(), v_eighth, f_eighth)
+        # t1 = time.time()
+        # print("Decimating Mesh time used: ", t1 - t0)
+
 
     scale, translation = generate_blender_screenshot_from_meshs(mesh_path, temp_path, rest_path, scale, translation)
+
+    import shutil; shutil.rmtree(mesh_path, ignore_errors=True)
 
     buffer = Image.open(rest_path).convert('RGBA')
     buffer.info['disposal'] = 2
@@ -81,7 +93,7 @@ def generate_obj_pics_blender_batched(_parts_data, percentages, workspace_path: 
     Log.info(f"Use scale={scale}, translation={translation}")
 
     buffers = []
-    with Pool(10) as pool:
+    with Pool(6) as pool:
         handler = []
         for percentage in percentages:
             temp_path = workspace_path / str(percentage)

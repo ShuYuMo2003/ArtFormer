@@ -206,7 +206,7 @@ if __name__ == '__main__':
     transformer_dataset_path.mkdir(exist_ok=True)
 
     shape_info_paths = list(map(Path, glob('../datasets/1_preprocessed_info/*.json')))
-    shape_info_paths = list(filter(lambda x : "Storage" in x.as_posix(), shape_info_paths))
+    # shape_info_paths = list(filter(lambda x : "Storage" in x.as_posix(), shape_info_paths))
     path_to_latent = evaluate_latent_codes()
 
     encoded_text_path = Path('../datasets/3_encoded_text_condition')

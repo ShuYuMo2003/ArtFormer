@@ -205,9 +205,9 @@ class Evaluater():
         # for debug only.
         # processed_nodes, atten_weights_list = pickle.load(open('/ssd1/dengzhidong/.sym/final/ArtFormer/elog/Final_OP1_05-27-01PM-29-48/StorageFurniture_45243_1/0/output.dat', 'rb')), None
 
-        output_data_path = output_path / "output.dat"
-        with open(output_data_path, 'wb') as f: f.write(pickle.dumps(processed_nodes))
-        Log.info("[Write] %s", output_data_path)
+        # output_data_path = output_path / "output.dat"
+        # with open(output_data_path, 'wb') as f: f.write(pickle.dumps(processed_nodes))
+        # Log.info("[Write] %s", output_data_path)
 
         output_tex_path = output_path / "input.txt"
         output_tex_path.write_text(text)

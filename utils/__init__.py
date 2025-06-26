@@ -1,7 +1,7 @@
 import re
 import json
 import torch
-import imageio
+import shutil
 import hashlib
 import trimesh
 import numpy as np
@@ -74,8 +74,10 @@ def camel_to_snake(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
 
-def generate_gif_toy(tokens, shape_output_path: Path, bar_prompt:str='', n_frame: int=50,
-                    n_timepoint: int=50, fps:int=55, blender_generated_gif=False):
+def generate_gif_toy(tokens, shape_output_path: Path, bar_prompt:str='', n_frame: int=100,
+                    n_timepoint: int=50, fps:int=40, blender_generated_gif=False):
+
+    shutil.rmtree(shape_output_path, ignore_errors=True)
 
     def speed_control_curve(n_frame, n_timepoint, timepoint):
         frameid = n_frame*(1.0/(1+np.exp(

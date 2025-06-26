@@ -45,8 +45,8 @@ class GenSDFLatentCodeEvaluator:
 
         output_mesh = (self.eval_mesh_output_path / f'GenSDFLatentCodeEvaluator_{0}.ply').as_posix()
         MeshUtils.create_mesh(self.gensdf, recon_latents[[0]],
-                        output_mesh, N=512,
-                        max_batch=(1 << 16),
+                        output_mesh, N=200,
+                        max_batch=(1 << 18),
                         from_plane_features=True)
         mesh = trimesh.load(output_mesh)
         return mesh

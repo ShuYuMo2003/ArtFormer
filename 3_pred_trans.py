@@ -29,17 +29,18 @@ if __name__ == '__main__':
 
     OPTION = config['OPTION']
     if OPTION == 1:
-        obj_name_list = ['StorageFurniture_45243_1',
-                         'StorageFurniture_45374_2', 'StorageFurniture_45636_3',
-                         'StorageFurniture_45710_0', 'StorageFurniture_46466_2',
-                         'StorageFurniture_46856_0', 'StorageFurniture_46856_1']
+        obj_name_list_all = list(map(lambda x : x.parent.stem + '_' + x.stem,
+                                     Path('data/datasets/3_text_condition').glob('*/*')))
+        obj_name_list = random.choices(obj_name_list_all, k=100)
+        random.shuffle(obj_name_list)
 
         for obj_name in tqdm(obj_name_list, 'obj_list'):
-            output_path = Path('elog') / f"Final_OP1_{tt}" / f"{obj_name}"
+            output_path = Path('elog') / f"final_output" / f"{obj_name}"
             obj_infos = obj_name.split('_')
             text_content = (text_datasets / '_'.join(obj_infos[:2]) / (str(obj_infos[2])+'.txt')).read_text()
             print("Processing", obj_name)
-            for rep in range(5):
+
+            for rep in range(7):
                 evaluator.inference_to_output_path(text_content, output_path / str(rep), blender_generated_gif=True)
     else:
         print('NOT SUPPORT ANYMORE.')
