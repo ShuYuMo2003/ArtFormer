@@ -18,6 +18,8 @@ import sys
 sys.path.append('..')
 from eval.visualize import visualize_obj_high_q
 
+from .blender_drivers import generate_obj_pics_blender_batched
+
 def smooth_mesh(mesh: trimesh.Trimesh):
     mesh.export("temp-smooth.ply")
     v, f = pcu.load_mesh_vf("temp-smooth.ply")
@@ -72,40 +74,70 @@ def camel_to_snake(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1).lower()
 
-def generate_gif_toy(tokens, shape_output_path: Path, bar_prompt:str='', n_frame: int=100,
-                    n_timepoint: int=50, fps:int=40, blender_generated_gif=False):
+def generate_gif_toy(tokens, shape_output_path: Path, bar_prompt:str='', n_frame: int=50,
+                    n_timepoint: int=50, fps:int=55, blender_generated_gif=False):
 
     def speed_control_curve(n_frame, n_timepoint, timepoint):
         frameid = n_frame*(1.0/(1+np.exp(
                 -0.19*(timepoint-n_timepoint/2)))-0.5)+(n_frame/2)
         if frameid < 0:
             frameid = 0
-        if frameid >= n_frame:
+        if int(frameid + 0.5) >= n_frame:
             frameid = n_frame-1
         return frameid
 
     buffers = []
-    for ratio in tqdm(np.linspace(0, 1, n_frame), desc=bar_prompt):
-        if not blender_generated_gif:
+    if not blender_generated_gif:
+        for ratio in tqdm(np.linspace(0, 1, n_frame), desc=bar_prompt):
             buffer = generate_obj_pics(tokens, ratio,
-                    [(3.487083128152961, 1.8127192062148014, 1.9810015800028038),
-                    (-0.04570716149497277, -0.06563260832821388, -0.06195879116203942),
-                    (-0.37480300238091124, 0.9080915656577206, -0.18679512249404312)])
-        else:
-            from PIL import Image
-            visualize_obj_high_q(tokens, shape_output_path / "temp#1" / str(ratio), shape_output_path / "temp#2" / str(ratio), ratio)
-            image = Image.open(shape_output_path / "temp#2" / str(ratio) / "result.png")
-            buffer = np.array(image)
-        buffers.append(buffer)
+                    [(3.487083128152961,      1.8127192062148014,   1.9810015800028038),
+                     (-0.04570716149497277, -0.06563260832821388, -0.06195879116203942),
+                     (-0.37480300238091124,   0.9080915656577206, -0.18679512249404312)   ])
+            buffers.append(buffer)
+
+    else:
+        buffers = generate_obj_pics_blender_batched(tokens, np.linspace(0, 1, n_frame), shape_output_path / "blender_temp")
 
     frames = []
     for timepoint in range(n_timepoint):
         buffer_id = speed_control_curve(n_frame, n_timepoint, timepoint)
-        frames.append(buffers[int(buffer_id)])
+        frames.append(buffers[int(buffer_id + 0.5)])
 
     frames = frames + frames[::-1]
 
-    imageio.mimsave((shape_output_path / "result.gif").as_posix(), frames, fps=fps)
+    from PIL import Image
+    # -------- 透明化处理 ------------------------
+    paletted_frames = []
+    for im in frames:
+        # 1) 确保是 RGBA（含α通道）
+        im_rgba = im.convert("RGBA")
+
+        # 2) 转 256 色调色板，让索引 255 空出来
+        p = im_rgba.convert(
+            "P",
+            palette=Image.ADAPTIVE,
+            dither=Image.NONE,
+            colors=255          # 0–254 用于实际颜色，255 留给透明
+        )
+
+        # 3) 把 255 号索引声明为“完全透明”
+        p.info["transparency"] = 255
+        p.info["disposal"] = 2            # 显示完就清除为透明
+        paletted_frames.append(p)
+    # -------------------------------------------
+
+    # -------- 保存 GIF（透明 & 不叠帧） ----------
+    shape_output_path = Path(shape_output_path)
+    paletted_frames[0].save(
+        (shape_output_path / "result.gif").as_posix(),
+        save_all=True,
+        append_images=paletted_frames[1:],
+        duration=1000 / fps,
+        loop=0,
+        transparency=255,   # 告诉 GIF：255 是透明色
+    )
+    # -------------------------------------------
+
 
 def untokenize_part_info(token):
     part_info = {

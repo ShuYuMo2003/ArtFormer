@@ -3,13 +3,13 @@ pretrained_model: null
 seed: 123456790
 wandb:
   project: SDF
-  entity: <skip>
+  entity: shuyumo1
 
 default_root_dir: train_root_dir/SDF
 
 dataset_n_dataloader:
   batch_size: 16
-  n_workers: 10
+  n_workers: 16
 
   dataset_dir: data/datasets
   samples_per_mesh: 16000

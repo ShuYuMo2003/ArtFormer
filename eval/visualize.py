@@ -15,9 +15,11 @@ from utils.generate_obj_pic import generate_meshs
 from utils.mylogging import Log
 
 SMOOTH_MESH_ITER_NUM = 1
-BLENDER_MAIN_PROGRAM_PATH = Path('3rd/blender-4.2.2-linux-x64/blender')
-BG_PLY_PATH = Path('static/bg.ply')
-BLENDER_SCRIPT_TEMPLATE = Path('static/blender_render_script_figure.template.py').read_text()
+ROOT_PATH = Path(__file__).resolve().parent
+BLENDER_MAIN_PROGRAM_PATH = ROOT_PATH / Path('../3rd/blender-4.2.2-linux-x64/blender')
+BG_PLY_PATH = ROOT_PATH / Path('../static/bg.ply')
+BLENDER_SCRIPT_TEMPLATE = (ROOT_PATH / Path('../static/blender_render_script_figure.template.py')).read_text()
+
 USE_GPU = True
 
 def smooth_mesh(src: Path, dist: Path):

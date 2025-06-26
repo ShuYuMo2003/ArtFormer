@@ -1,10 +1,10 @@
-base_on_model: null
+base_on_model: /ssd1/dengzhidong/.sym/final/ArtFormer/train_root_dir/Transformer_Diffusion/checkpoint/05-18-02PM-13-29/epoch=0573-loss=0.33387.ckpt
 
 seed: 1234567890
 wandb:
   use: true
   project: TF_Diffusion
-  entity: <skip>
+  entity: shuyumo1
 
 default_root_dir: train_root_dir/Transformer_Diffusion
 num_epochs: 1000001
@@ -79,6 +79,7 @@ optimizer_paramerter:
     tf_loss: 10
     th_loss: 5
     zl_loss: 2
+    lt_loss: 0
     # vq_loss: 1
     # df_loss: 2
 

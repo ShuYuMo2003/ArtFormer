@@ -57,15 +57,15 @@ if __name__ == '__main__':
     meshs_path = Path('../datasets/1_preprocessed_mesh')
 
     processed_mesh_path = Path('../datasets/1.5_preprocessed_obj_mesh')
-    high_q_output_path = Path('../datasets/editing_screenshot_high_q')
+    high_q_output_path = Path('../datasets/4_screenshot_high_q')
     shutil.rmtree(processed_mesh_path, ignore_errors=True)
     shutil.rmtree(high_q_output_path, ignore_errors=True)
 
-    need_stem = [
-        'StorageFurniture_45984',
-        'StorageFurniture_45238',
-        'StorageFurniture_45168',
-    ]
+    # need_stem = [
+    #     'StorageFurniture_45984',
+    #     'StorageFurniture_45238',
+    #     'StorageFurniture_45168',
+    # ]
 
     high_q_output_path.mkdir(exist_ok=True)
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
                          desc='Generating High-Quality Screenshots'):
         Log.info(f"Processing {shapes_name}")
 
-        if shapes_name not in need_stem: continue
+        # if shapes_name not in need_stem: continue
 
         print(shapes_name)
 

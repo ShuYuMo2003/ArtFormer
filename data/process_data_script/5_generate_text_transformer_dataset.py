@@ -174,7 +174,7 @@ def process(shape_info_path:Path, transformer_dataset_path:Path, encoded_text_pa
                     'exist_node': dataset[0],
                     'inferenced_token': dataset[1],
                     'description': encoded_text_paths,
-                    'images': shape_name_2_image_path[prefix_name]
+                    # 'images': shape_name_2_image_path[prefix_name]
                 }, cls=HighPrecisionJsonEncoder, indent=2)
             f.write(text)
 
@@ -194,7 +194,12 @@ def process_image_condition():
 
 
 if __name__ == '__main__':
-    best_diffusion_ckpt_point = '<skip, change this after the finish the training of diffusion>'
+    import argparse
+    parser = argparse.ArgumentParser(description='Generate Articulation Dataset.')
+    parser.add_argument('--diff_ckpt_path', type=str, help='Ckpt of Diffusion Model.')
+    args = parser.parse_args()
+
+    best_diffusion_ckpt_point = args.diff_ckpt_path
 
     transformer_dataset_path = Path('../datasets/4_transformer_dataset')
     shutil.rmtree(transformer_dataset_path, ignore_errors=True)

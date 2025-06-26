@@ -1,6 +1,6 @@
-checkpoint_path: <skip>
+checkpoint_path: train_root_dir/Transformer_Diffusion/checkpoint/05-19-09AM-21-39/epoch=0737-loss=0.02768.ckpt
 
-OPTION: -1
+OPTION: 1
 
 eval_output_path: log/ours/
 

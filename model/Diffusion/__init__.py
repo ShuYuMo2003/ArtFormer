@@ -22,9 +22,7 @@ from utils.mylogging import Log
 import os
 import json
 import yaml
-absolute_path = Path(os.path.abspath(__file__))
-sdf_config_path = absolute_path.parent.parent.parent / "configs" / "SDF" / "train.yaml"
-sdf_config_content = yaml.safe_load(sdf_config_path.read_text())
+
 
 class Diffusion(TransArticulatedBaseModule):
     def __init__(self, config):
@@ -48,6 +46,9 @@ class Diffusion(TransArticulatedBaseModule):
         except Exception as e:
             print("DO NOT FOUND CUSTOM CKPT. USE DEFAULT. : ", e)
             import time; time.sleep(2)
+            absolute_path = Path(os.path.abspath(__file__))
+            sdf_config_path = absolute_path.parent.parent.parent / "configs" / "1_SDF" / "train.yaml"
+            sdf_config_content = yaml.safe_load(sdf_config_path.read_text())
             self.sdf = SDFAutoEncoder(sdf_config_content)
         self.sdf.eval()
 

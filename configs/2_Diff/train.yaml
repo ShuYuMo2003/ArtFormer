@@ -2,7 +2,7 @@ seed: 123456790
 wandb:
   use: true
   project: Diff
-  entity: <skip>
+  entity: shuyumo1
 
 
 load_from_pretrained_ckpt: null

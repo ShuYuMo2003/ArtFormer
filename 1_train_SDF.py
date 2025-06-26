@@ -30,7 +30,6 @@ if __name__ == '__main__':
     wandb_run = wandb.init(
         config=config, project=config['wandb']['project'],
         entity=config['wandb']['entity'], name=run_name,
-
     )
     wandb_logger = WandbLogger()
 

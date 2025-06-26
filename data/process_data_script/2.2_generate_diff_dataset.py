@@ -15,7 +15,9 @@ from model.SDFAutoEncoder.dataloader import GenSDFDataset
 from utils.mylogging import Log
 from utils import to_cuda, camel_to_snake
 
-best_ckpt_path = '<skip, change this after the finish of the training of the SDF model>'
+# HF_ENDPOINT=https://hf-mirror.com
+
+best_ckpt_path = None
 
 def determine_latentcode_encoder(best_ckpt_path):
     Log.info('Using best ckpt: %s', best_ckpt_path)
@@ -84,7 +86,13 @@ def encode_texts(texts, t5_cache_path, t5_model_name, t5_batch_size, t5_device, 
     return text_to_e_text
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Generate Diffusion Dataset.')
+    parser.add_argument('--sdf_ckpt_path', type=str, help='Ckpt of SDF Model.')
+    args = parser.parse_args()
+
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    best_ckpt_path = Path(args.sdf_ckpt_path)
 
     gensdf_model = determine_latentcode_encoder(best_ckpt_path)
 
@@ -94,7 +102,7 @@ if __name__ == '__main__':
     mesh_info_path = Path('../datasets/1_preprocessed_info')
 
     t5_cache_path = Path('../../cache/t5_cache')
-    t5_cache_path.mkdir(exist_ok=True)
+    t5_cache_path.mkdir(exist_ok=True, parents=True)
     t5_model_name = 'google-t5/t5-large'
     t5_batch_size = 16
     t5_max_sentence_length = 16
@@ -156,7 +164,7 @@ if __name__ == '__main__':
     #         success.append(mesh_name)
 
     with open(output_path / 'meta.json', 'w') as f:
-        json.dump({'ckpt': best_ckpt_path, 'failed': failed, 'success': success}, f, indent=2)
+        json.dump({'ckpt': best_ckpt_path.as_posix(), 'failed': failed, 'success': success}, f, indent=2)
 
     Log.info('Failed to find latent code for %s', failed)
     Log.info('failed count = %s', len(failed))

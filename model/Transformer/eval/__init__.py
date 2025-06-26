@@ -187,8 +187,8 @@ class Evaluater():
             if need_mesh: part_info['mesh'] = self.latentcode_evaluator.generate_mesh(z.unsqueeze(0))
             # import pdb; pdb.set_trace()
             part_info['z'] = z
-            raw_points_sdf, rho = self.latentcode_evaluator.generate_uniform_point_cloud_inside_mesh(z.unsqueeze(0))
-            part_info['points'], part_info['rho'] = fit_into_bounding_box(raw_points_sdf, rho, part_info['bbx'])
+            # raw_points_sdf, rho = self.latentcode_evaluator.generate_uniform_point_cloud_inside_mesh(z.unsqueeze(0))
+            # part_info['points'], part_info['rho'] = fit_into_bounding_box(raw_points_sdf, rho, part_info['bbx'])
 
             processed_node.update(part_info)
             processed_nodes.append(processed_node)
@@ -202,26 +202,29 @@ class Evaluater():
         output_path.mkdir(exist_ok=True, parents=True)
         processed_nodes, atten_weights_list = self.inference_from_text(text, enc_data)
 
-        output_tex_path = output_path / "input.txt"
-        output_tex_path.write_text(text)
-        Log.info("[Write] %s", output_tex_path)
-
-        # output_gif_path = output_path / "simple"
-        # generate_gif_toy(processed_nodes, output_gif_path, bar_prompt="   - Generate Frames", n_frame=10, blender_generated_gif=blender_generated_gif)
-        # Log.info("[Write] %s", output_gif_path)
+        # for debug only.
+        # processed_nodes, atten_weights_list = pickle.load(open('/ssd1/dengzhidong/.sym/final/ArtFormer/elog/Final_OP1_05-27-01PM-29-48/StorageFurniture_45243_1/0/output.dat', 'rb')), None
 
         output_data_path = output_path / "output.dat"
         with open(output_data_path, 'wb') as f: f.write(pickle.dumps(processed_nodes))
         Log.info("[Write] %s", output_data_path)
 
-        output_temp_path : Path = output_path / "temp"
-        output_temp_path.mkdir(exist_ok=True, parents=True)
-        Log.info("[Write] %s", output_temp_path)
+        output_tex_path = output_path / "input.txt"
+        output_tex_path.write_text(text)
+        Log.info("[Write] %s", output_tex_path)
 
-        for ratio in [0, 0.5, 1]:
-            visualize_obj_high_q(processed_nodes, output_temp_path / str(ratio), output_path / str(ratio), ratio)
+        output_gif_path = output_path / "gif"
+        generate_gif_toy(processed_nodes, output_gif_path, bar_prompt="   - Generate Frames", blender_generated_gif=blender_generated_gif)
+        Log.info("[Write] %s", output_gif_path)
 
-        return atten_weights_list
+        # output_temp_path : Path = output_path / "temp"
+        # output_temp_path.mkdir(exist_ok=True, parents=True)
+        # Log.info("[Write] %s", output_temp_path)
+
+        # for ratio in [0, 0.5, 1]:
+        #     visualize_obj_high_q(processed_nodes, output_temp_path / str(ratio), output_path / str(ratio), ratio)
+
+        # return atten_weights_list
 
     def inference_dat_file_only(self, text, output_dat_path, enc_data=None):
         processed_nodes, atten_weights_list = self.inference_from_text(text, need_mesh=False, enc_data=enc_data)
