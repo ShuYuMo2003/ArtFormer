@@ -2,6 +2,8 @@
 
 This work was accepted by CVPR 2025.
 
+You may check the repo with all commits in `https://github.com/ShuYuMo2003/TransArticulate/tree/main` if you are interested :).
+
 ## Clone the repo
 ```
 git clone https://github.com/ShuYuMo2003/ArtFormer.git
