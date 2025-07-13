@@ -1,4 +1,8 @@
-# ArtFormer: Controllable Generation of Diverse 3D Articulated Objects
+![](attachment/cvpr25_poster_5120.png)
+
+# ArtFormer: Controllable Generation of Diverse 3D Articulated Objects (CVPR 2025)
+
+![](attachment/result.gif)
 
 This work was accepted by CVPR 2025.
 
