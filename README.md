@@ -35,7 +35,7 @@ tar -xvf blender-4.2.2-linux-x64.tar.xz
 ```
 
 ## Try demo
-download [articulation transformer checkpoint]() and change the first line of `configs/3_TF-Diff/text-eval.yaml`.
+download [articulation transformer checkpoint](https://drive.google.com/drive/folders/1CDX-i6SdeqAaBfHVw9wibHrAmtB7zZ_N?usp=sharing) and change the first line of `configs/3_TF-Diff/text-eval.yaml`.
 
 ```
 python demo.py -c configs/3_TF-Diff/text-eval.yaml
