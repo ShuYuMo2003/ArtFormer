@@ -34,6 +34,13 @@ wget https://ftp.halifax.rwth-aachen.de/blender/release/Blender4.2/blender-4.2.2
 tar -xvf blender-4.2.2-linux-x64.tar.xz
 ```
 
+## Try demo
+download [articulation transformer checkpoint]() and change the first line of `configs/3_TF-Diff/text-eval.yaml`.
+
+```
+python demo.py -c configs/3_TF-Diff/text-eval.yaml
+```
+
 ## Prepare Dataset & Training Model
 
 ### Download partnet-mobility-v0.zip
